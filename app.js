@@ -1,40 +1,42 @@
-// ambil data dari localStorage
-let matches = JSON.parse(localStorage.getItem("matches")) || [];
+const home = document.getElementById("home");
+const away = document.getElementById("away");
 
 // isi dropdown
-function init() {
-  let home = document.getElementById("home");
-  let away = document.getElementById("away");
+teams.forEach(t=>{
+  home.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+  away.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+});
 
-  teams.forEach(t => {
-    home.innerHTML += `<option>${t.name}</option>`;
-    away.innerHTML += `<option>${t.name}</option>`;
-  });
-
-  render();
+// helper
+function getTeam(id){
+  return teams.find(t => t.id == id);
 }
 
 // tambah match
-function addMatch() {
-  let h = document.getElementById("home").value;
-  let a = document.getElementById("away").value;
+function addMatch(){
+  let id = document.getElementById("matchId").value;
+  let date = document.getElementById("date").value;
+  let h = parseInt(home.value);
+  let a = parseInt(away.value);
   let sh = parseInt(document.getElementById("scoreH").value);
   let sa = parseInt(document.getElementById("scoreA").value);
 
+  if(!id || !date) return alert("Isi Match ID & Tanggal!");
   if(h === a) return alert("Tim tidak boleh sama!");
 
-  matches.push({home:h, away:a, h:sh, a:sa});
+  matches.push({ id, date, home:h, away:a, sh, sa });
+
   localStorage.setItem("matches", JSON.stringify(matches));
 
   render();
 }
 
-// hitung klasemen
-function calculate() {
+// render klasemen
+function renderKlasemen(){
   let table = {};
 
   teams.forEach(t=>{
-    table[t.name] = {name:t.name, logo:t.logo, main:0, win:0, draw:0, lose:0, poin:0};
+    table[t.id] = { ...t, main:0, m:0, s:0, k:0, poin:0 };
   });
 
   matches.forEach(m=>{
@@ -43,41 +45,83 @@ function calculate() {
 
     h.main++; a.main++;
 
-    if(m.h > m.a){
-      h.win++; h.poin+=3; a.lose++;
-    } else if(m.h < m.a){
-      a.win++; a.poin+=3; h.lose++;
+    if(m.sh > m.sa){
+      h.m++; h.poin+=3;
+      a.k++;
+    } else if(m.sh < m.sa){
+      a.m++; a.poin+=3;
+      h.k++;
     } else {
-      h.draw++; a.draw++;
+      h.s++; a.s++;
       h.poin++; a.poin++;
     }
   });
 
-  return Object.values(table).sort((a,b)=>b.poin-a.poin);
-}
+  let arr = Object.values(table).sort((a,b)=>b.poin - a.poin);
 
-// render
-function render() {
-  let data = calculate();
+  let html = "<div class='card'><h3>Klasemen</h3>";
 
-  let html = "";
-
-  data.forEach((t,i)=>{
-    let zone = "";
-    if(i<4) zone="green";
-    if(i>=data.length-3) zone="red";
-
+  arr.forEach((t,i)=>{
     html += `
-      <div class="row ${zone}">
-        <div>${i+1}</div>
+    <div class="row">
+      <div>${i+1}</div>
+      <div class="team">
         <img src="${t.logo}">
-        <div>${t.name}</div>
-        <div>${t.poin}</div>
+        ${t.name}
       </div>
+      <div>${t.poin}</div>
+    </div>
     `;
   });
 
-  document.getElementById("table").innerHTML = html;
+  html += "</div>";
+
+  document.getElementById("klasemenPage").innerHTML = html;
 }
 
-init();
+// render match
+function renderMatch(){
+  let html = "<div class='card'><h3>Match</h3>";
+
+  matches.forEach(m=>{
+    let h = getTeam(m.home);
+    let a = getTeam(m.away);
+
+    html += `
+    <div class="row">
+      <div>${m.id}</div>
+      <div>${h.name} ${m.sh} - ${m.sa} ${a.name}</div>
+      <div>${m.date}</div>
+    </div>
+    `;
+  });
+
+  html += "</div>";
+
+  document.getElementById("matchList").innerHTML = html;
+}
+
+// tab
+function showPage(page){
+  document.getElementById("klasemenPage").style.display="none";
+  document.getElementById("matchPage").style.display="none";
+
+  document.getElementById("tabKlasemen").classList.remove("active");
+  document.getElementById("tabMatch").classList.remove("active");
+
+  if(page==="klasemen"){
+    document.getElementById("klasemenPage").style.display="block";
+    document.getElementById("tabKlasemen").classList.add("active");
+  } else {
+    document.getElementById("matchPage").style.display="block";
+    document.getElementById("tabMatch").classList.add("active");
+  }
+}
+
+// render semua
+function render(){
+  renderKlasemen();
+  renderMatch();
+}
+
+render();
