@@ -1,49 +1,75 @@
 body {
+  font-family: Arial;
   margin:0;
-  font-family:sans-serif;
-  background:#f0f2f5;
+  background:#f5f6fa;
 }
 
 .header {
   background:#111;
   color:white;
-  text-align:center;
   padding:15px;
+  text-align:center;
   font-weight:bold;
+}
+
+.tabs {
+  display:flex;
+  background:#fff;
+}
+
+.tabs button {
+  flex:1;
+  padding:12px;
+  border:none;
+  background:#eee;
+  font-weight:bold;
+}
+
+.tabs button.active {
+  background:#111;
+  color:white;
+}
+
+.container {
+  padding:10px;
 }
 
 .card {
   background:white;
-  margin:10px;
-  padding:15px;
-  border-radius:12px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:10px;
 }
 
-select, input {
+.row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid #eee;
+}
+
+.team {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.team img {
+  width:28px;
+  height:28px;
+}
+
+input, select {
   padding:8px;
-  margin:5px;
+  margin:5px 0;
+  width:100%;
 }
 
 button {
   padding:10px;
+  border:none;
   background:#111;
   color:white;
-  border:none;
   border-radius:8px;
 }
-
-.row {
-  display:grid;
-  grid-template-columns:30px 30px 1fr 40px;
-  padding:8px;
-  border-bottom:1px solid #eee;
-  align-items:center;
-}
-
-.row img {
-  width:24px;
-}
-
-.green { background:#e8f5e9; }
-.red { background:#ffebee; }
