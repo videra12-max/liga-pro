@@ -1,1 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liga 1 Pro</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+</head>
 
+<body>
+
+<div class="app">
+
+  <div class="header">🏆 Liga 1 Indonesia</div>
+
+  <!-- INPUT MATCH -->
+  <div class="card">
+    <h3>Input Match</h3>
+    <select id="home"></select>
+    <input type="number" id="scoreH" placeholder="Home">
+    <span>vs</span>
+    <input type="number" id="scoreA" placeholder="Away">
+    <select id="away"></select>
+    <button onclick="addMatch()">Simpan</button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card">
+    <h3>Klasemen</h3>
+    <div id="table"></div>
+  </div>
+
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
